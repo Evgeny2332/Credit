@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AuthorizationConnect : MonoBehaviour
 {
     [SerializeField] private SupabaseDataFetcher _dataFetcher;
+    [SerializeField] private UserDataConnector _userConnector;
 
     [SerializeField] private InputField _loginInput;
     [SerializeField] private InputField _passwordInput;
@@ -22,17 +22,14 @@ public class AuthorizationConnect : MonoBehaviour
         string password = _passwordInput.text;
         _incorrectText.SetActive(false);
 
-        Debug.Log("Начался перебор данных");
         foreach (UserAuthorizationData data in userAuthorizationData)
         {
             if (data.Login == login && data.Password == password)
             {
                 ConnectData();
-                Debug.Log("Данные верны");
                 return;
             }
         }
-        Debug.Log("Данных нет");
         _incorrectText.SetActive(true);
     }
 
@@ -43,6 +40,6 @@ public class AuthorizationConnect : MonoBehaviour
 
     private void ConnectData()
     {
-        SceneManager.LoadScene(1);
+       
     }
 }

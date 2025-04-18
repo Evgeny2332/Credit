@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Text;
 
 public class SupabaseConnector : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class SupabaseConnector : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Get(url);
         request.SetRequestHeader("apikey", _apiKey);
         request.SetRequestHeader("Authorization", "Bearer " + _apiKey);
+        request.SetRequestHeader("Accept", "application/json");
 
         yield return request.SendWebRequest();
 
@@ -23,8 +25,35 @@ public class SupabaseConnector : MonoBehaviour
         }
         else
         {
-            string json = request.downloadHandler.text;
-            onSuccess?.Invoke(json);
+            onSuccess?.Invoke(request.downloadHandler.text);
         }
-    } 
+    }
+
+    public IEnumerator SendData(string table, string jsonData, System.Action onSuccess, System.Action<string> onError)
+    {
+        string url = $"{_projectUrl}/rest/v1/{table}";
+        byte[] jsonToSend = Encoding.UTF8.GetBytes(jsonData);
+
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("apikey", _apiKey);
+        request.SetRequestHeader("Authorization", "Bearer " + _apiKey);
+        request.SetRequestHeader("Prefer", "return=representation");
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            onError?.Invoke("Ошибка отправки: " + request.error);
+            Debug.Log("Ответ от сервера: " + request.downloadHandler.text);
+        }
+        else
+        {
+            onSuccess?.Invoke();
+            Debug.Log("Ответ от сервера: " + request.downloadHandler.text);
+        }
+    }
 }
+    

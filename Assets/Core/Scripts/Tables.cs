@@ -6,7 +6,7 @@ public class User
     public int UserId;
     public string FirstName;
     public string LastName;
-    public string DateOfBirth;
+    public string DateOfBirthday;
     public string PassportNumber;
     public string Phone;
     public string Address;

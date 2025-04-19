@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RegistrationConnect : MonoBehaviour
@@ -10,6 +9,8 @@ public class RegistrationConnect : MonoBehaviour
     [SerializeField] private InputField _passwordInput;
 
     [SerializeField] private UserDataConnector _userConnector;
+    [SerializeField] private GameObject _userWindow;
+    [SerializeField] private GameObject _authorizationWindow;
 
     private User _user;
 
@@ -24,7 +25,6 @@ public class RegistrationConnect : MonoBehaviour
             PassportNumber = "",
             Phone = "",
             Address = "",
-            Income = 0,
             RoleId = 1
         };
 
@@ -37,13 +37,16 @@ public class RegistrationConnect : MonoBehaviour
         };
 
         StartCoroutine(_dataFetcher.SetUserAuthorizationData(newUserAuthorization, Success, Error));
+        _userConnector.User = _user;
+        _userConnector.CheckData();
         Debug.Log("Зарегались");
     }
 
     private void Success()
     {
-        
-        SceneManager.LoadScene(1);
+
+        _authorizationWindow.SetActive(false);
+        _userWindow.SetActive(true);
     }
     private void Error(string value)
     {

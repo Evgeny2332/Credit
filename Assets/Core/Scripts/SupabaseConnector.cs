@@ -55,5 +55,32 @@ public class SupabaseConnector : MonoBehaviour
             Debug.Log("Ответ от сервера: " + request.downloadHandler.text);
         }
     }
+
+    public IEnumerator UpdateData(string table, int id, string jsonData, System.Action onSuccess, System.Action<string> onError)
+    {
+        string url = $"{_projectUrl}/rest/v1/{table}?id=eq.{id}";
+        byte[] jsonToSend = Encoding.UTF8.GetBytes(jsonData);
+
+        UnityWebRequest request = new UnityWebRequest(url, "PATCH");
+        request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("apikey", _apiKey);
+        request.SetRequestHeader("Authorization", "Bearer " + _apiKey);
+        request.SetRequestHeader("Prefer", "return=representation");
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            onError?.Invoke("Ошибка обновления: " + request.error);
+            Debug.Log("Ответ от сервера: " + request.downloadHandler.text);
+        }
+        else
+        {
+            onSuccess?.Invoke();
+            Debug.Log("Успешное обновление: " + request.downloadHandler.text);
+        }
+    }
+
 }
-    

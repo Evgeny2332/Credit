@@ -116,4 +116,47 @@ public class SupabaseDataFetcher : MonoBehaviour
         string json = JsonUtility.ToJson(creditProduct);
         yield return StartCoroutine(_supabaseConnector.SendData("CreditProducts", json, onSuccess, onError));
     }
+
+    public IEnumerator UpdateUser(int id, User user, System.Action onSuccess, System.Action<string> onError)
+    {
+        string json = JsonUtility.ToJson(user);
+        yield return StartCoroutine(_supabaseConnector.UpdateData("Users", id, json, onSuccess, onError));
+    }
+
+    public IEnumerator UpdateLoan(int id, Loan loan, System.Action onSuccess, System.Action<string> onError)
+    {
+        string json = JsonUtility.ToJson(loan);
+        yield return StartCoroutine(_supabaseConnector.UpdateData("Loans", id, json, onSuccess, onError));
+    }
+
+    public IEnumerator UpdateUserAuthorizationData(int id, UserAuthorizationData data, System.Action onSuccess, System.Action<string> onError)
+    {
+        string json = JsonUtility.ToJson(data);
+        yield return StartCoroutine(_supabaseConnector.UpdateData("UserAuthorizationData", id, json, onSuccess, onError));
+    }
+
+    public IEnumerator UpdateContract(int id, Contract contract, System.Action onSuccess, System.Action<string> onError)
+    {
+        string json = JsonUtility.ToJson(contract);
+        yield return StartCoroutine(_supabaseConnector.UpdateData("Contracts", id, json, onSuccess, onError));
+    }
+
+    public IEnumerator UpdateRole(int id, Role role, System.Action onSuccess, System.Action<string> onError)
+    {
+        string json = JsonUtility.ToJson(role);
+        yield return StartCoroutine(_supabaseConnector.UpdateData("Roles", id, json, onSuccess, onError));
+    }
+
+    public IEnumerator UpdatePayment(int id, Payment payment, System.Action onSuccess, System.Action<string> onError)
+    {
+        string json = JsonUtility.ToJson(payment);
+        yield return StartCoroutine(_supabaseConnector.UpdateData("Payments", id, json, onSuccess, onError));
+    }
+
+    public IEnumerator UpdateCreditProduct(int id, CreditProduct creditProduct, System.Action onSuccess, System.Action<string> onError)
+    {
+        string json = JsonUtility.ToJson(creditProduct);
+        yield return StartCoroutine(_supabaseConnector.UpdateData("CreditProducts", id, json, onSuccess, onError));
+    }
+
 }

@@ -3,14 +3,13 @@ using System;
 [System.Serializable]
 public class User
 {
-    public int UserId;
+    public int id;
     public string FirstName;
     public string LastName;
     public string DateOfBirthday;
     public string PassportNumber;
     public string Phone;
     public string Address;
-    public int Income;
     public int RoleId;
 }
 

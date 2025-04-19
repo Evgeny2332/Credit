@@ -3,70 +3,52 @@ using System;
 [System.Serializable]
 public class User
 {
-    public int id;
-    public string FirstName;
-    public string LastName;
-    public string DateOfBirthday;
-    public string PassportNumber;
-    public string Phone;
-    public string Address;
-    public int RoleId;
+    public int id { get; set; } 
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string DateOfBirthday { get; set; }
+    public string PassportNumber { get; set; }
+    public string Phone { get; set; }
+    public string Address { get; set; }
+    public int RoleId { get; set; }
 }
+
 
 [System.Serializable]
 public class Loan
 {
-    public int LoanId;
-    public int UserId;
-    public int CreditProductId;
-    public int Amount;
-    public int TermMonths;
-    public int InterestRate;
-    public string StartDate;
-    public string Status;
+    public int id { get; set; }
+    public int UserId { get; set; }
+    public int Amount { get; set; }
+    public int TermMonths { get; set; }
+    public int InterestRate { get; set; }
+    public string StartDate { get; set; }
+    public string Status { get; set; }
 }
 
 [System.Serializable]
 public class UserAuthorizationData
 {
-    public int DataId;
-    public string Login;
-    public string Password;
-    public int UserId;
+    public int id { get; set; }
+    public string Login { get; set; }
+    public string Password { get; set; }
 }
+
 
 [System.Serializable]
 public class Contract
 {
-    public int ContractId;
-    public int LoanId;
-    public string ContractDate; 
-    public string ExpiryDate; 
-    public string Terms;
+    public int id { get; set; }
+    public int LoanId { get; set; }
+    public string ContractDate { get; set; }
+    public string ExpiryDate { get; set; }
+    public string Terms { get; set; }
 }
 
 [System.Serializable]
 public class Role
 {
-    public int RoleId;
-    public string Name;
+    public int id { get; set; }
+    public string Name { get; set; }
 }
 
-[System.Serializable]
-public class Payment
-{
-    public int PaymentId;
-    public int LoanId;
-    public string PaymentDate;
-    public int Amount;
-}
-
-[System.Serializable]
-public class CreditProduct
-{
-    public int CreditProductId;
-    public string Name;
-    public int InterestRate;
-    public int MaxAmount;
-    public int MaxTermMonths;
-}

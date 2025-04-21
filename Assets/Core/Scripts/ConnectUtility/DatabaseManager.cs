@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class DatabaseManager : MonoBehaviour
@@ -13,13 +13,13 @@ public class DatabaseManager : MonoBehaviour
 
     #region Пользователи
 
-    public async Task<List<User>> GetUsersAsync()
+    public async UniTask<List<User>> GetUsersAsync()
     {
         var users = await _connector.GetUsersAsync();
         return users;
     }
 
-    public async Task<User> GetUserByIdAsync(int userId)
+    public async UniTask<User> GetUserByIdAsync(int userId)
     {
         var users = await _connector.GetUsersAsync();
         return users?.Find(user => user.id == userId);
@@ -29,13 +29,13 @@ public class DatabaseManager : MonoBehaviour
 
     #region Кредиты
 
-    public async Task<List<Loan>> GetLoansAsync()
+    public async UniTask<List<Loan>> GetLoansAsync()
     {
         var loans = await _connector.GetLoansAsync();
         return loans;
     }
 
-    public async Task<Loan> GetLoanByIdAsync(int loanId)
+    public async UniTask<Loan> GetLoanByIdAsync(int loanId)
     {
         var loans = await _connector.GetLoansAsync();
         return loans?.Find(loan => loan.id == loanId);
@@ -45,13 +45,13 @@ public class DatabaseManager : MonoBehaviour
 
     #region Контракты
 
-    public async Task<List<Contract>> GetContractsAsync()
+    public async UniTask<List<Contract>> GetContractsAsync()
     {
         var contracts = await _connector.GetContractsAsync();
         return contracts;
     }
 
-    public async Task<Contract> GetContractByIdAsync(int contractId)
+    public async UniTask<Contract> GetContractByIdAsync(int contractId)
     {
         var contracts = await _connector.GetContractsAsync();
         return contracts?.Find(contract => contract.id == contractId);
@@ -61,13 +61,13 @@ public class DatabaseManager : MonoBehaviour
 
     #region Роли
 
-    public async Task<List<Role>> GetRolesAsync()
+    public async UniTask<List<Role>> GetRolesAsync()
     {
         var roles = await _connector.GetRolesAsync();
         return roles;
     }
 
-    public async Task<Role> GetRoleByIdAsync(int roleId)
+    public async UniTask<Role> GetRoleByIdAsync(int roleId)
     {
         var roles = await _connector.GetRolesAsync();
         return roles?.Find(role => role.id == roleId);
@@ -75,5 +75,18 @@ public class DatabaseManager : MonoBehaviour
 
     #endregion
 
-    // Можно добавить методы для авторизации, если нужно
+    #region Авторизация
+
+    public async UniTask<List<UserAuthorizationData>> GetAuthorizationDataAsync()
+    {
+        return await _connector.GetAuthorizationDataAsync();
+    }
+
+    public async UniTask<UserAuthorizationData> GetAuthorizationByCredentialsAsync(string login, string password)
+    {
+        var list = await GetAuthorizationDataAsync();
+        return list?.Find(x => x.Login == login && x.Password == password);
+    }
+
+    #endregion
 }

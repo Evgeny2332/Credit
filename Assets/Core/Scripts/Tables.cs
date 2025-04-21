@@ -26,7 +26,6 @@ public class Loan
     public int Amount { get; set; }
     public int TermMonths { get; set; }
     public int InterestRate { get; set; }
-    public string StartDate { get; set; }
     public string Status { get; set; }
 }
 
@@ -47,8 +46,7 @@ public class Contract
     public int? id { get; set; }
 
     public int LoanId { get; set; }
-    public string ContractDate { get; set; }
-    public string ExpiryDate { get; set; }
+    public int ExpireMonths { get; set; }
     public string Terms { get; set; }
 }
 

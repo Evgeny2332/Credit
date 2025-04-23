@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class CalculationCredit : MonoBehaviour
 {
+    private SupabaseConnector _connector;
+    private User _user;
+
     [Header("Input")]
     [SerializeField] private InputField _amount;
     [SerializeField] private InputField _termMounts;
@@ -18,10 +21,22 @@ public class CalculationCredit : MonoBehaviour
     [Header("Windows")]
     [SerializeField] private GameObject _registerWindow;
     [SerializeField] private GameObject _doneCredit;
+    [SerializeField] private GameObject _calculateWindow;
+
+    private void Start()
+    {
+        _connector = new SupabaseConnector();
+    }
 
     private void Update()
     {
         CheckInput();
+    }
+
+    public void Enable(User user)
+    {
+        _user = user;
+        _calculateWindow.SetActive(true);
     }
 
     private void CheckInput()
@@ -91,7 +106,19 @@ public class CalculationCredit : MonoBehaviour
 
         _doneCredit.SetActive(true);
         _registerWindow.SetActive(false);
-        Debug.Log("Создание заявки возможно. Продолжаем...");
+
+        Loan newLoan = new Loan()
+        {
+            Amount = amount,
+            TermMonths = termMonths,
+            InterestRate = _interestRate,
+            UserId = _user.id ?? 0,
+            Status = "На рассмотрении"
+        };
+
+        _connector.AddLoanAsync(newLoan);
+
+        Debug.Log("Заявка создана!");
     }
 
 }

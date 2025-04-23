@@ -25,9 +25,7 @@ public class SupabaseConnector
         }
 
         var json = await response.Content.ReadAsStringAsync();
-        var items = JsonConvert.DeserializeObject<List<T>>(json);
-
-        return items;
+        return JsonConvert.DeserializeObject<List<T>>(json);
     }
 
     public async UniTask<bool> InsertRecordAsync<T>(string tableName, T record)
@@ -50,6 +48,45 @@ public class SupabaseConnector
         return true;
     }
 
+    public async UniTask<bool> UpdateRecordAsync<T>(string tableName, int id, T updatedRecord)
+    {
+        var request = new HttpRequestMessage(new HttpMethod("PATCH"), $"{baseUrl}{tableName}?id=eq.{id}");
+        request.Headers.Add("apikey", apiKey);
+        request.Headers.Add("Authorization", $"Bearer {apiKey}");
+        request.Headers.Add("Prefer", "return=minimal");
+
+        string json = JsonConvert.SerializeObject(updatedRecord);
+        request.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+        var response = await httpClient.SendAsync(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            Debug.LogError($"ќшибка при обновлении записи в {tableName} (id={id}): {response.StatusCode} Ч {await response.Content.ReadAsStringAsync()}");
+            return false;
+        }
+
+        return true;
+    }
+
+    public async UniTask<bool> IsLoginTakenAsync(string login)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}UserAuthorizationData?Login=eq.{login}");
+        request.Headers.Add("apikey", apiKey);
+        request.Headers.Add("Authorization", $"Bearer {apiKey}");
+
+        var response = await httpClient.SendAsync(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            Debug.LogError($"ќшибка при проверке логина: {response.StatusCode}");
+            return false;
+        }
+
+        var json = await response.Content.ReadAsStringAsync();
+        var records = JsonConvert.DeserializeObject<List<UserAuthorizationData>>(json);
+
+        return records.Count > 0;
+    }
+
 
     public UniTask<List<User>> GetUsersAsync() => FetchTableAsync<User>("Users");
     public UniTask<List<UserAuthorizationData>> GetAuthorizationDataAsync() => FetchTableAsync<UserAuthorizationData>("UserAuthorizationData");
@@ -58,13 +95,14 @@ public class SupabaseConnector
     public UniTask<List<Role>> GetRolesAsync() => FetchTableAsync<Role>("Roles");
 
     public UniTask<bool> AddUserAsync(User user) => InsertRecordAsync("Users", user);
-
     public UniTask<bool> AddAuthorizationDataAsync(UserAuthorizationData authData) => InsertRecordAsync("UserAuthorizationData", authData);
-
     public UniTask<bool> AddLoanAsync(Loan loan) => InsertRecordAsync("Loans", loan);
-
     public UniTask<bool> AddContractAsync(Contract contract) => InsertRecordAsync("Contracts", contract);
-
     public UniTask<bool> AddRoleAsync(Role role) => InsertRecordAsync("Roles", role);
 
+    public UniTask<bool> UpdateUserAsync(User user) => UpdateRecordAsync("Users", user.id ?? 0, user);
+    public UniTask<bool> UpdateAuthorizationDataAsync(UserAuthorizationData data) => UpdateRecordAsync("UserAuthorizationData", data.id ?? 0, data);
+    public UniTask<bool> UpdateLoanAsync(Loan loan) => UpdateRecordAsync("Loans", loan.id ?? 0, loan);
+    public UniTask<bool> UpdateContractAsync(Contract contract) => UpdateRecordAsync("Contracts", contract.id ?? 0, contract);
+    public UniTask<bool> UpdateRoleAsync(Role role) => UpdateRecordAsync("Roles", role.id ?? 0, role);
 }

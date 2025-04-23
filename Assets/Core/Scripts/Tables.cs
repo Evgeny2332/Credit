@@ -44,9 +44,7 @@ public class Contract
 {
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public int? id { get; set; }
-
     public int LoanId { get; set; }
-    public int ExpireMonths { get; set; }
     public string Terms { get; set; }
 }
 

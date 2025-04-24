@@ -68,7 +68,7 @@ public class CalculationCredit : MonoBehaviour
     {
         if (amount <= 10_000) return 50;
         else if (amount <= 1_000_000) return 30;
-        else if (amount <= 10_000_000) return 20;
+        else if (amount <= 100_000_000) return 20;
 
         return 0;
     }
